@@ -1,9 +1,9 @@
 import dearpygui.dearpygui as dpg
 import requests
 
+
 dpg.create_context()
 counter = 0
-
 
 def load_img(im_name, texture_name=None):
     texture_name = str(counter) if str(texture_name) == 'None' else texture_name
@@ -19,12 +19,13 @@ def load_img(im_name, texture_name=None):
 def send_speed(sender):
     speed = dpg.get_value(sender)
     print(speed)
+    requests.get(f'http://192.168.0.100/spd{speed}')
 
 
 def send_brightness(sender):
     brightness = dpg.get_value(sender)
     print(brightness)
-
+    requests.get(f'http://192.168.0.100/br{brightness}')
 
 def send_color(sender):
     color = dpg.get_value(sender)
@@ -32,7 +33,6 @@ def send_color(sender):
     # dpg.set_value('color_sel', color)
     print(color[:-1])
     requests.get(f'http://192.168.0.100/cl{color[0]}.{color[1]}.{color[2]}')
-
 
 def send_off(sender):
     off_command = 'off'
@@ -49,26 +49,26 @@ def get_values_from_esp():
     brightness = 0
     speed = 0
     color = [0, 0, 0]
-    state = 0
+    response = requests.get('http://192.168.0.105/init')
+    if response.status_code == 200: data = response.json()['settings']
     dpg.set_value('brightness_slider', brightness)
     dpg.set_value('speed_slider', speed)
     dpg.set_value('color_sel', color)
 
 
 
-sun_tx_tag = load_img('lamp.png', 'sun')
-# lamp_off_tx_tag = load_img('lamp_off.png', 'lamp_off')
-# lamp_on_tx_tag = load_img('lamp_on.png', 'lamp_on')
-# speed_tx_tag = load_img('fast_forward.png', 'speed')
-# low_speed_tx_tag = load_img('low_speed.png', 'low_speed')
-# hi_speed_tx_tag = load_img('hi_speed.png', 'hi_speed')
+sun_tx_tag = load_img('C:/Users/v.sinitsyn/Git_projects/led_manager/led_manager/base_app/icons/lamp.png', 'sun')
+lamp_off_tx_tag = load_img('C:/Users/v.sinitsyn/Git_projects/led_manager/led_manager/base_app/icons/lamp_off.png', 'lamp_off')
+lamp_on_tx_tag = load_img('C:/Users/v.sinitsyn/Git_projects/led_manager/led_manager/base_app/icons/lamp_on.png', 'lamp_on')
+low_speed_tx_tag = load_img('C:/Users/v.sinitsyn/Git_projects/led_manager/led_manager/base_app/icons/low_speed.png', 'low_speed')
+hi_speed_tx_tag = load_img('C:/Users/v.sinitsyn/Git_projects/led_manager/led_manager/base_app/icons/hi_speed.png', 'hi_speed')
 
 with dpg.window(tag="Primary Window", no_title_bar=True, no_resize=True):
     with dpg.group(horizontal=True, horizontal_spacing=175, indent=5):
-        dpg.add_image(texture_tag=sun_tx_tag,
+        dpg.add_image(texture_tag=lamp_off_tx_tag,
                       width=15, height=15,
                       tint_color=(255, 255, 255, 255))
-        dpg.add_image(texture_tag=sun_tx_tag,
+        dpg.add_image(texture_tag=lamp_on_tx_tag,
                       width=15, height=15,
                       tint_color=(255, 255, 255, 255))
 
@@ -81,10 +81,10 @@ with dpg.window(tag="Primary Window", no_title_bar=True, no_resize=True):
                        )
 
     with dpg.group(horizontal=True, horizontal_spacing=175, indent=5):
-        dpg.add_image(texture_tag=sun_tx_tag,
+        dpg.add_image(texture_tag=low_speed_tx_tag,
                       width=15, height=15,
                       tint_color=(255, 255, 255, 255))
-        dpg.add_image(texture_tag=sun_tx_tag,
+        dpg.add_image(texture_tag=hi_speed_tx_tag,
                       width=15, height=15,
                       tint_color=(255, 255, 255, 255))
 
@@ -118,7 +118,7 @@ with dpg.window(tag="Primary Window", no_title_bar=True, no_resize=True):
                        callback=send_on
                        )
 
-    dpg.add_image(texture_tag='sun',
+    dpg.add_image(texture_tag=sun_tx_tag,
                   width=55,
                   height=55,
                   indent=80)

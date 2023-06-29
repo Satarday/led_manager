@@ -37,9 +37,9 @@ def send_init():
 def save(pr):
     with open('settings.json', 'w') as fp:
       json.dump(pr, fp)
-      print(s)
+    #   print(s)
     fp.close()
-    print('saved!')
+    # print('saved!')
     conn.send('HTTP/1.1 200 OK\n')
     conn.send('Content-Type: text/html\n')
     conn.send('Connection: close\n\n')
@@ -63,14 +63,13 @@ def set_color(r, g, b, br):
     g = int(g*br/100)
     b = int(b*br/100)
     real_color = (r, g, b)
-    # n.fill((r, g, b))
-    n.fill((25.3, 34.6, 17.5))
+    n.fill((r, g, b))
     n.write()
     conn.send('HTTP/1.1 200 OK\n')
     conn.send('Content-Type: text/html\n')
     conn.send('Connection: close\n\n')
     conn.close()
-    print(real_color, color)
+    # print(real_color, color)
     return color
 
 
@@ -84,7 +83,7 @@ def set_brightness(br):
 
 while True:
     conn, addr = s.accept()
-    print('Got a connection from %s' % str(addr))
+    # print('Got a connection from %s' % str(addr))
     request = conn.recv(1024)
     request = str(request)
     led_on = ure.search('/on', request)

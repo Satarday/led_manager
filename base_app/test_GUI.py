@@ -18,32 +18,32 @@ def load_img(im_name, texture_name=None):
 
 def send_speed(sender):
     speed = dpg.get_value(sender)
-    print(speed)
+    # print(speed)
     requests.get(f'http://192.168.0.103/spd{speed}')
 
 
 def send_brightness(sender):
     brightness = dpg.get_value(sender)
-    print(brightness)
+    # print(brightness)
     requests.get(f'http://192.168.0.103/br{brightness}')
 
 def send_color(sender):
     color = dpg.get_value(sender)
     color = list(map(int, color))
     # dpg.set_value('color_sel', color)
-    print(color[:-1])
+    # print(color[:-1])
     requests.get(f'http://192.168.0.103/cl{color[0]}.{color[1]}.{color[2]}')
-    print()
+    # print()
 
 def send_off(sender):
     off_command = 'off'
-    print(off_command)
+    # print(off_command)
     requests.get(f'http://192.168.0.103/{off_command}')
 
 
 def send_on(sender):
     on_command = 'on'
-    print(on_command)
+    # print(on_command)
     requests.get(f'http://192.168.0.103/{on_command}')
 
 def get_values_from_esp():
@@ -124,13 +124,13 @@ with dpg.window(tag="Primary Window", no_title_bar=True, no_resize=True):
                    height=30,
                    label='SAVE',
                    callback=save)
-    dpg.add_image(texture_tag=sun_tx_tag,
-                  width=55,
-                  height=55,
-                  indent=80)
+    # dpg.add_image(texture_tag=sun_tx_tag,
+    #               width=55,
+    #               height=55,
+    #               indent=80)
 
 get_values_from_esp()
-dpg.create_viewport(title='L/m ', resizable=False, max_width=250, max_height=500)
+dpg.create_viewport(title='L/m ', resizable=False, max_width=220, max_height=430)
 dpg.setup_dearpygui()
 dpg.show_viewport()
 dpg.set_primary_window("Primary Window", True)

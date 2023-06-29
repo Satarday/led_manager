@@ -10,20 +10,3 @@ import time
 #     data = json.load(fp)
 #
 # print(data)
-flag = True
-
-
-def save(pr):
-
-
-
-
-print(brightness, speed, color)
-
-brightness = 100
-params = [brightness, speed, color]
-save(params)
-print(flag)
-while flag:
-    print('vaiting....')
-    time.sleep(1)

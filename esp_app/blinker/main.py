@@ -1,7 +1,7 @@
 import json
 import neopixel
 import ure
-import time
+
 
 # функция загрузки настроек из файла при подаче питания
 def init():
@@ -9,57 +9,6 @@ def init():
         settings = json.load(fp)
     fp.close()
     return settings[0], settings[1], settings[2]
-
-
-# функция для отправки данных приложению по get запросу
-def send_init():
-    with open ('settings.json', 'r') as fp:
-        settings = json.load(fp)
-    json_payload = json.dumps(settings)
-    conn.send('HTTP/1.1 200 OK\n')
-    conn.send('Content-Type: text/html\n')
-    conn.send('Connection: close\n\n')
-    conn.send(json_payload)
-    fp.close()
-
-
-# функция для сохранения данных в память, вешает прогу, надо переписать на асинхронную
-def save(pr):
-    time.sleep(10)
-    with open('settings.json', 'w') as fp:
-      json.dump(pr, fp)
-    fp.close()
-    flag = False
-    print('saved!')
-
-
-# функция для выключения ленты
-def off():
-    n.fill((0, 0, 0))
-    n.write()
-    conn.send('HTTP/1.1 200 OK\n')
-    conn.send('Content-Type: text/html\n')
-    conn.send('Connection: close\n\n')
-
-
-# функция для установки цвета
-def set_color(r, g, b):
-    color = [r, g, b]
-    n.fill(int(r*brightness), int(g*brightness), int(b*brightness))
-    n.write()
-    conn.send('HTTP/1.1 200 OK\n')
-    conn.send('Content-Type: text/html\n')
-    conn.send('Connection: close\n\n')
-    return color
-
-
-# функция для установки яркости
-def set_brightness(br):
-    brightness = br
-    conn.send('HTTP/1.1 200 OK\n')
-    conn.send('Content-Type: text/html\n')
-    conn.send('Connection: close\n\n')
-    n.write
 
 
 n = neopixel.NeoPixel(data_pin, 144)
@@ -71,11 +20,68 @@ color_holder = [0,0,0]
 brightness_holder = 0
 speed_holder = 0
 
-# color = [0, 0, 0]
-# old_color = [0, 0, 0]
-# brightness = 0
-# speed = 0
-# рабочий цикл
+# функция для отправки данных приложению по get запросу
+def send_init():
+    with open ('settings.json', 'r') as fp:
+        settings = json.load(fp)
+    json_payload = json.dumps(settings)
+    conn.send('HTTP/1.1 200 OK\n')
+    conn.send('Content-Type: text/html\n')
+    conn.send('Connection: close\n\n')
+    conn.send(json_payload)
+    conn.close()
+    fp.close()
+
+
+# функция для сохранения данных в память, вешает прогу, надо переписать на асинхронную
+def save(pr):
+    with open('settings.json', 'w') as fp:
+      json.dump(pr, fp)
+      print(s)
+    fp.close()
+    print('saved!')
+    conn.send('HTTP/1.1 200 OK\n')
+    conn.send('Content-Type: text/html\n')
+    conn.send('Connection: close\n\n')
+    conn.close()
+
+
+# функция для выключения ленты
+def off():
+    n.fill((0, 0, 0))
+    n.write()
+    conn.send('HTTP/1.1 200 OK\n')
+    conn.send('Content-Type: text/html\n')
+    conn.send('Connection: close\n\n')
+    conn.close()
+
+
+# функция для установки цвета
+def set_color(r, g, b, br):
+    color = [r, g, b]
+    r = int(r*br/100)
+    g = int(g*br/100)
+    b = int(b*br/100)
+    real_color = (r, g, b)
+    # n.fill((r, g, b))
+    n.fill((25.3, 34.6, 17.5))
+    n.write()
+    conn.send('HTTP/1.1 200 OK\n')
+    conn.send('Content-Type: text/html\n')
+    conn.send('Connection: close\n\n')
+    conn.close()
+    print(real_color, color)
+    return color
+
+
+# функция для установки яркости
+def set_brightness(br):
+    set_color(color[0],color[1],color[2], br)
+    n.write()
+    new_br = br
+    return new_br
+
+
 while True:
     conn, addr = s.accept()
     print('Got a connection from %s' % str(addr))
@@ -85,29 +91,16 @@ while True:
     led_off = ure.search('/off', request)
     led_init = ure.search('/init', request)
     led_ck = ure.search('/cl([0-9]+).([0-9]+).([0-9]+)', request)
-    # cl = request.find('/cl')
-    # led_on = request.find('/on')
-    # led_off = request.find('/off')
-    # led_init = request.find('/init')
-    # if led_init == 6: send_init()
-    # elif led_on == 6: set_color(color[0], color[1], color[2])
-    # elif led_off == 6: off()
-    # if cl == 6:
-    # color = request.split(' ')
-    # color = color[1][3:]
-    # color = color.split('.')
-    # result = [int(item) for item in color]
-    # color = result
+    led_br = ure.search('/br([0-9]+)', request)
+    led_sv = ure.search('/sv', request)
     if led_init: send_init()
-    elif led_on: set_color(color[0], color[1], color[2])
+    elif led_on: set_color(color[0], color[1], color[2], brightness)
     elif led_off: off()
-    elif led_ck: color = set_color(int(led_ck.group(1)), int(led_ck.group(2)), int(led_ck.group(3)))
+    elif led_ck: color = set_color(int(led_ck.group(1)), int(led_ck.group(2)), int(led_ck.group(3)), brightness)
+    elif led_br: brightness = set_brightness(int(led_br.group(1)))
+    elif led_sv: save((brightness,speed,color))
     else:
         conn.send('HTTP/1.1 200 OK\n')
         conn.send('Content-Type: text/html\n')
         conn.send('Connection: close\n\n')
-    conn.close()
-
-    # if color != old_color:
-    #     old_color = color
-    #     set_color(old_color[0], old_color[1], old_color[2])
+        conn.close()

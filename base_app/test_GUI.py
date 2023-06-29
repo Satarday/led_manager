@@ -4,7 +4,6 @@ import requests
 dpg.create_context()
 counter = 0
 
-
 def load_img(im_name, texture_name=None):
     texture_name = str(counter) if str(texture_name) == 'None' else texture_name
     width, height, channels, data = dpg.load_image(im_name)
@@ -56,19 +55,18 @@ def get_values_from_esp():
 
 
 
-sun_tx_tag = load_img('lamp.png', 'sun')
-# lamp_off_tx_tag = load_img('lamp_off.png', 'lamp_off')
-# lamp_on_tx_tag = load_img('lamp_on.png', 'lamp_on')
-# speed_tx_tag = load_img('fast_forward.png', 'speed')
-# low_speed_tx_tag = load_img('low_speed.png', 'low_speed')
-# hi_speed_tx_tag = load_img('hi_speed.png', 'hi_speed')
+sun_tx_tag = load_img('C:/Users/v.sinitsyn/Git_projects/led_manager/led_manager/base_app/icons/lamp.png', 'sun')
+lamp_off_tx_tag = load_img('C:/Users/v.sinitsyn/Git_projects/led_manager/led_manager/base_app/icons/lamp_off.png', 'lamp_off')
+lamp_on_tx_tag = load_img('C:/Users/v.sinitsyn/Git_projects/led_manager/led_manager/base_app/icons/lamp_on.png', 'lamp_on')
+low_speed_tx_tag = load_img('C:/Users/v.sinitsyn/Git_projects/led_manager/led_manager/base_app/icons/low_speed.png', 'low_speed')
+hi_speed_tx_tag = load_img('C:/Users/v.sinitsyn/Git_projects/led_manager/led_manager/base_app/icons/hi_speed.png', 'hi_speed')
 
 with dpg.window(tag="Primary Window", no_title_bar=True, no_resize=True):
     with dpg.group(horizontal=True, horizontal_spacing=175, indent=5):
-        dpg.add_image(texture_tag=sun_tx_tag,
+        dpg.add_image(texture_tag=lamp_off_tx_tag,
                       width=15, height=15,
                       tint_color=(255, 255, 255, 255))
-        dpg.add_image(texture_tag=sun_tx_tag,
+        dpg.add_image(texture_tag=lamp_on_tx_tag,
                       width=15, height=15,
                       tint_color=(255, 255, 255, 255))
 
@@ -81,10 +79,10 @@ with dpg.window(tag="Primary Window", no_title_bar=True, no_resize=True):
                        )
 
     with dpg.group(horizontal=True, horizontal_spacing=175, indent=5):
-        dpg.add_image(texture_tag=sun_tx_tag,
+        dpg.add_image(texture_tag=low_speed_tx_tag,
                       width=15, height=15,
                       tint_color=(255, 255, 255, 255))
-        dpg.add_image(texture_tag=sun_tx_tag,
+        dpg.add_image(texture_tag=hi_speed_tx_tag,
                       width=15, height=15,
                       tint_color=(255, 255, 255, 255))
 
@@ -118,7 +116,7 @@ with dpg.window(tag="Primary Window", no_title_bar=True, no_resize=True):
                        callback=send_on
                        )
 
-    dpg.add_image(texture_tag='sun',
+    dpg.add_image(texture_tag=sun_tx_tag,
                   width=55,
                   height=55,
                   indent=80)

@@ -46,9 +46,6 @@ def send_on(sender):
     requests.get(f'http://192.168.0.100/{on_command}')
 
 def get_values_from_esp():
-    brightness = 0
-    speed = 0
-    color = [0, 0, 0]
     response = requests.get('http://192.168.0.105/init')
     if response.status_code == 200: data = response.json()
     dpg.set_value('brightness_slider', data[0])

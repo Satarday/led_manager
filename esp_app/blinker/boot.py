@@ -1,5 +1,4 @@
 # Complete project details at https://RandomNerdTutorials.com
-
 try:
   import usocket as socket
 except:
@@ -20,7 +19,7 @@ password = 'polotence123'
 station = network.WLAN(network.STA_IF)
 
 station.active(True)
-# station.ifconfig(("192.168.1.105", "255.255.255.0", "xxx.xxx.x.xx", "8.8.8.8"))
+# station.ifconfig(("192.168.0.105", "255.255.255.0", "xxx.xxx.x.xx", "8.8.8.8"))
 station.connect(ssid, password)
 
 while station.isconnected() == False:

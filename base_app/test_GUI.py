@@ -50,10 +50,10 @@ def get_values_from_esp():
     speed = 0
     color = [0, 0, 0]
     response = requests.get('http://192.168.0.105/init')
-    if response.status_code == 200: data = response.json()['settings']
-    dpg.set_value('brightness_slider', brightness)
-    dpg.set_value('speed_slider', speed)
-    dpg.set_value('color_sel', color)
+    if response.status_code == 200: data = response.json()
+    dpg.set_value('brightness_slider', data[0])
+    dpg.set_value('speed_slider', data[1])
+    dpg.set_value('color_sel', data[2])
 
 
 
